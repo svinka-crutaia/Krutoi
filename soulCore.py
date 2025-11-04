@@ -47,29 +47,33 @@ class game:
     def render(self):
         self.screen.fill(self.bg_color)
         
-        if self.player:
+        if self.player and self.player.visible :
             self.player.update_person()
         for sprite_obj in self.sprites:
-            sprite_obj.update_pos()
+            if sprite_obj.visible:
+                sprite_obj.update_pos()
         for text_obj in self.texts:
-            text_obj.update_pos()
+            if text_obj.visible:
+                text_obj.update_pos()
         for button_obj in self.buttons:
-            button_obj.update_state()
+            if button_obj.visible:
+                button_obj.update_state()
         
         for layer in self.layers:
             for obj in layer:
-                if hasattr(obj, 'root'): 
+                if hasattr(obj, 'visible') and not obj.visible:
+                    continue
+                if hasattr(obj, 'root') : 
                     self.screen.blit(obj.root, obj.pos)
-                elif hasattr(obj, 'img_rot'): 
+                elif hasattr(obj, 'img_rot') : 
                     self.screen.blit(obj.img_rot, obj.pos)
-                elif hasattr(obj, 'surface'):
+                elif hasattr(obj, 'surface') :
                     self.screen.blit(obj.surface, obj.pos)
-                elif hasattr(obj, 'button_img'): 
+                elif hasattr(obj, 'button_img') : 
                     self.screen.blit(obj.button_img, obj.rect)
         
         pg.display.update()
         pg.display.flip()
-    
 
     def isLeft_Mouse(self):
      if self.e:   
@@ -169,6 +173,7 @@ class text:
         self.x = int(x)
         self.y = int(y)
         self.color = color
+        self.visible = True
         self.text = text
         self.layer = 1
         game_instance.layers[1].append(self)
@@ -185,6 +190,12 @@ class text:
     def update_pos(self):
         self.rect.center = (self.x, self.y)
         self.pos = self.rect.center
+    
+    def remove(self):
+        if self in game_instance.texts:
+            game_instance.texts.remove(self)
+        if self in game_instance.layers[self.layer]:
+            game_instance.layers[self.layer].remove(self)
 
 class sprite:
     def __init__(self , x , y , rotate , img):
@@ -199,6 +210,7 @@ class sprite:
         self.clones = []
         self.current_frame = 0
         self.animation_speed = 500  
+        self.visible = True
         self.last_animation_time = 0
         self.hasCollider = True
         self.isWall = False
@@ -282,6 +294,12 @@ class sprite:
 
         if self.current_frame < min or self.current_frame > max:
             self.current_frame = min
+    
+    def remove(self):
+        if self in game_instance.texts:
+            game_instance.sprites.remove(self)
+        if self in game_instance.layers[self.layer]:
+            game_instance.layers[self.layer].remove(self)
 
 class button():
     def __init__(self, text= '', isWorking= True, x= 0 , y= 0, size= 100):
@@ -297,6 +315,7 @@ class button():
         game_instance.layers[3].append(self)
         game_instance.buttons.append(self)
         self.set_button()
+        self.visible = True
 
         self.default_img = pg.Surface((size, size))
         self.default_img.fill((100, 100, 100))  
@@ -351,6 +370,12 @@ class button():
 
         self.button_img = pg.transform.scale(self.frames[self.state], self.size)
         self.pos = (self.x , self.y)
+    
+    def remove(self):
+        if self in game_instance.texts:
+            game_instance.buttons.remove(self)
+        if self in game_instance.layers[self.layer]:
+            game_instance.layers[self.layer].remove(self)
 
 class player():
     def __init__(self, name= 'noName', down_idle= '', down_0= '', down_1= '' , up_idle= ''):
@@ -365,6 +390,7 @@ class player():
         self.speed = 10
         self.damage = 10
         self.armor = 0
+        self.visible = True
         self.layer = 2
         game_instance.layers[2].append(self)
         self.mag_damage = 0
