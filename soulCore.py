@@ -214,7 +214,9 @@ class sprite:
         self.last_animation_time = 0
         self.hasCollider = True
         self.isWall = False
-        Default_size = (200, 200)
+        self.height = 200
+        self.width = 200
+        Default_size = (self.height, self.width)
         self.size = Default_size
         self.mask = pg.mask.from_surface(self.animate_frames[self.current_frame])
         
@@ -316,8 +318,10 @@ class button():
         game_instance.buttons.append(self)
         self.set_button()
         self.visible = True
+        self.width = size
+        self.height = size
 
-        self.default_img = pg.Surface((size, size))
+        self.default_img = pg.Surface((self.width, self.height))
         self.default_img.fill((100, 100, 100))  
         self.frames.append(self.default_img)  
         self.frames.append(self.default_img)  
@@ -396,6 +400,7 @@ class player():
         self.mag_damage = 0
         self.mag_armor = 1
         self.name = name
+        self.inv = []
         self.frames = []  
         down_idle_img = pg.image.load(down_idle)
         self.frames.append(down_idle_img)
@@ -459,3 +464,15 @@ class player():
 
     def isPlayer_touch(self, other):
         return self.rect.colliderect(other)
+    
+items = []
+
+class item():
+    def __init__(self, name= 'noNamed item', rary = 0, type = 4, count = 1):
+        self.name = name
+        raries = ['common', 'rary', 'expensive', 'mistic', 'godness', 'necromantic']
+        self.rary = raries[rary]
+        types = ['weapon', 'gun', 'ammo', 'spell', 'item', 'quest','food', 'medication']
+        self.type = types[type]
+        self.count = count
+        items.append(self)
