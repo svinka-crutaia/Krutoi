@@ -1,4 +1,4 @@
-import main as m
+from soulCoreLib import items
 
 class item():
     def __init__(self, name= 'noNamed item', rary = 0, type = 4, count = 1):
@@ -8,4 +8,4 @@ class item():
         types = ['weapon', 'gun', 'ammo', 'spell', 'item', 'quest','food', 'medication']
         self.type = types[type]
         self.count = count
-        m.items.append(self)
+        items.append(self)

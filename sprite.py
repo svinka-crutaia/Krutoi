@@ -1,5 +1,6 @@
 import pygame as pg
-import main as m
+import soulCoreLib as sc
+
 
 class sprite:
     def __init__(self , x , y , rotate , img):
@@ -10,7 +11,8 @@ class sprite:
         self.animate_frames = []
         self.animate_frames.append(self.img)
         self.layer = 1
-        m.game_instance.layers[1].append(self)
+        game_instance = sc.game_instance
+        game_instance.layers[1].append(self)
         self.clones = []
         self.current_frame = 0
         self.animation_speed = 500  
@@ -24,7 +26,7 @@ class sprite:
         self.size = Default_size
         self.mask = pg.mask.from_surface(self.animate_frames[self.current_frame])
         
-        m.game_instance.sprites.append(self)
+        game_instance.sprites.append(self)
         self.img_scale = pg.transform.scale(self.animate_frames[self.current_frame], self.size)
         self.img_rot = pg.transform.rotate(self.img_scale, self.rotate)
         self.mask = pg.mask.from_surface(self.img_rot)
@@ -33,6 +35,7 @@ class sprite:
         self.pos = self.rect.center
 
     def update_pos(self):
+        game_instance = sc.game_instance
         if not self.isWall:
             self.img_scale = pg.transform.scale(self.animate_frames[self.current_frame], self.size)
             self.img_rot = pg.transform.rotate(self.img_scale, self.rotate)
@@ -46,7 +49,7 @@ class sprite:
             self.rect = self.img_rot.get_rect(center=(self.x, self.y))
             self.pos = self.rect.center 
 
-            player = m.game_instance.player
+            player = game_instance.player
             if player is None:
                 return
             offset = (player.rect.x - self.rect.x, player.rect.y - self.rect.y)
@@ -102,7 +105,8 @@ class sprite:
             self.current_frame = min
     
     def remove(self):
-        if self in m.game_instance.texts:
-            m.game_instance.sprites.remove(self)
-        if self in m.game_instance.layers[self.layer]:
-            m.game_instance.layers[self.layer].remove(self)
+        game_instance = sc.game_instance
+        if self in game_instance.texts:
+            game_instance.sprites.remove(self)
+        if self in game_instance.layers[self.layer]:
+            game_instance.layers[self.layer].remove(self)

@@ -1,6 +1,5 @@
 import pygame as pg
-import main as m
-
+import soulCoreLib as sc
 
 class button():
     def __init__(self, text= '', isWorking= True, x= 0 , y= 0, size= 100):
@@ -13,8 +12,9 @@ class button():
         self.size = (100, 100)
         self.frames = []
         self.layer = 3
-        m.game_instance.layers[3].append(self)
-        m.game_instance.buttons.append(self)
+        game_instance = sc.game_instance
+        game_instance.layers[3].append(self)
+        game_instance.buttons.append(self)
         self.set_button()
         self.visible = True
         self.width = size
@@ -26,7 +26,7 @@ class button():
         self.frames.append(self.default_img)  
         self.frames.append(self.default_img)  
         
-        m.game_instance.buttons.append(self)
+        game_instance.buttons.append(self)
         self.set_button()
 
     def set_button(self):
@@ -55,12 +55,14 @@ class button():
         return self.rect.collidepoint(mouse_pos)
     
     def isButton_pressed(self):
+        game_instance = sc.game_instance
         mouse_pos = pg.mouse.get_pos()
         if self.rect.collidepoint(mouse_pos):
-            return m.game_instance.isLeft_Mouse()
+            return game_instance.isLeft_Mouse()
     
     def update_state(self):
-        if self.isMouse_focus() and not m.game_instance.isLeft_Mouse():
+        game_instance = sc.game_instance
+        if self.isMouse_focus() and not game_instance.isLeft_Mouse():
             self.state = 0
             self.img = self.frames[0]
 
@@ -75,7 +77,8 @@ class button():
         self.pos = (self.x , self.y)
     
     def remove(self):
-        if self in m.game_instance.texts:
-            m.game_instance.buttons.remove(self)
-        if self in m.game_instance.layers[self.layer]:
-            m.game_instance.layers[self.layer].remove(self)
+        game_instance = sc.game_instance
+        if self in game_instance.texts:
+            game_instance.buttons.remove(self)
+        if self in game_instance.layers[self.layer]:
+            game_instance.layers[self.layer].remove(self)
