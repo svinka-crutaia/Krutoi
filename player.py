@@ -61,29 +61,35 @@ class player():
         self.mask = pg.mask.from_surface(self.root)
         self.rect = self.root.get_rect()
         self.rect.center = self.pos
+        if self.visible:
+            if game_instance.isKey_Pressed('s'): 
+                self.y += self.speed
+                self.animate_min_max(1,2)
+                self.state = 'down'
+            elif game_instance.isKey_Pressed('w'): 
+                self.y -= self.speed
+                self.state = 'up'
+            elif game_instance.isKey_Pressed('d'): 
+                self.x += self.speed
+                self.state = 'right'
+            elif game_instance.isKey_Pressed('a'):  
+                self.x -= self.speed
+                self.state = 'left'
         
-        if game_instance.isKey_Pressed('s'): 
-            self.y += self.speed
-            self.animate_min_max(1,2)
-            self.state = 'down'
-        elif game_instance.isKey_Pressed('w'): 
-            self.y -= self.speed
-            self.state = 'up'
-        elif game_instance.isKey_Pressed('d'): 
-            self.x += self.speed
-            self.state = 'right'
-        elif game_instance.isKey_Pressed('a'):  
-            self.x -= self.speed
-            self.state = 'left'
+            self.pos = (self.x, self.y)
+            self.rect.center = self.pos
         
-        self.pos = (self.x, self.y)
-        self.rect.center = self.pos
-        
-        if not game_instance.isKey_Pressed('s') and self.state == 'down':
-            self.current_frame = 0
-        if not game_instance.isKey_Pressed('w') and self.state == 'up':
-            self.current_frame = 3
+            if not game_instance.isKey_Pressed('s') and self.state == 'down':
+                self.current_frame = 0
+            if not game_instance.isKey_Pressed('w') and self.state == 'up':
+                self.current_frame = 3
 
     def isPlayer_touch(self, other):
         return self.rect.colliderect(other)
     
+    def hidePerson(self):
+        self.visible = False
+    
+    def showPerson(self):
+
+        self.visible = True

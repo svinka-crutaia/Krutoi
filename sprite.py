@@ -3,14 +3,16 @@ import soulCoreLib as sc
 
 
 class sprite:
-    def __init__(self , x , y , rotate , img):
+    def __init__(self , x , y , rotate , img , width = 200, height = 200):
         self.x = x
         self.y = y
         self.rotate = rotate
-        self.img = pg.image.load(img).convert_alpha()
+        self.preImg = img
+        self.img = pg.image.load(self.preImg).convert_alpha()
         self.animate_frames = []
         self.animate_frames.append(self.img)
         self.layer = 1
+        
         game_instance = sc.game_instance
         game_instance.layers[1].append(self)
         self.clones = []
@@ -20,8 +22,8 @@ class sprite:
         self.last_animation_time = 0
         self.hasCollider = True
         self.isWall = False
-        self.height = 200
-        self.width = 200
+        self.height = height
+        self.width = width
         Default_size = (self.height, self.width)
         self.size = Default_size
         self.mask = pg.mask.from_surface(self.animate_frames[self.current_frame])
@@ -79,8 +81,8 @@ class sprite:
         self.img_rot = pg.transform.scale(self.animate_frames[self.current_frame], self.size)
 
     def create_clone(self, name= f'noName'):
+        clone = sc.sprite(x = self.x, y= self.y, rotate= self.rotate, img= self.preImg, width= self.width, height= self.height)
         clone.index = len(self.clones)
-        clone = self
         clone.name = str(name) + ' ' + str(clone.index)
         self.clones.append(clone)
         return clone
@@ -106,7 +108,7 @@ class sprite:
     
     def remove(self):
         game_instance = sc.game_instance
-        if self in game_instance.texts:
+        if self in game_instance.sprites:
             game_instance.sprites.remove(self)
         if self in game_instance.layers[self.layer]:
             game_instance.layers[self.layer].remove(self)

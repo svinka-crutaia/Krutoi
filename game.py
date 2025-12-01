@@ -41,8 +41,9 @@ class gameClass:
             for self.e in pg.event.get():
                 if self.e.type == pg.QUIT:
                     os.system('cls')
-                    print("Приложение отключено!")
                     self.run = False
+                    print("Приложение отключено!")
+                    
     
     def render(self):
         self.screen.fill(self.bg_color)
@@ -92,14 +93,3 @@ class gameClass:
     def isKey_Pressed(self, key):
         return kb.is_pressed(key)
         
-    def start(self):
-        while self.run:
-            self.clock.tick(60)
-            self.eventsCheck()
-            
-            for scene_obj in self.scenes:
-                if scene_obj.isRun:
-                    for func in scene_obj.cycles_loop:
-                        func()
-            
-            self.render()

@@ -2,7 +2,7 @@ import pygame as pg
 import soulCoreLib as sc
 
 class button():
-    def __init__(self, text= '', isWorking= True, x= 0 , y= 0, size= 100):
+    def __init__(self, text= '', isWorking= True, x= 0 , y= 0, width= 100, height= 100):
         self.text = text
         self.isWorking = isWorking
         self.x = x
@@ -17,8 +17,9 @@ class button():
         game_instance.buttons.append(self)
         self.set_button()
         self.visible = True
-        self.width = size
-        self.height = size
+        self.width = width
+        self.height = height
+        self.size = (self.width, self.height)
 
         self.default_img = pg.Surface((self.width, self.height))
         self.default_img.fill((100, 100, 100))  
